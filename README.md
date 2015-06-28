@@ -1,3 +1,3 @@
 # Member
 
-a python libray.
+A django project of learning.
