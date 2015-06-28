@@ -1,1 +1,0 @@
-from flask import Flask# create Flask instanceapp = Flask(__name__)# import config.py fileapp.config.from_object('config')# import views.py filefrom app import views
