@@ -25,7 +25,9 @@ def login_merchant(request):
 	user = authenticate(username=username, password=password)
 	if user is not None:
 		login(request, user)
+		shop = Shop.objects.filter(merchant=user)[0]
 		responese['resp'] = '0000'
+		responese['shop_id'] = shop.id
 	else:
 		responese['resp'] = '0001'
 	return HttpResponse(json.dumps(responese))
