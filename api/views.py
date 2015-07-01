@@ -30,7 +30,7 @@ def login_merchant(request):
 		responese['shop_id'] = shop.id
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
 # def logout(request):
 # 	responese = {}
@@ -53,7 +53,7 @@ def shop_add(request):
 		responese['resp'] = '0000'
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
 @login_required
 def membership_new(request):
@@ -87,7 +87,7 @@ def membership_new(request):
 			responese['msg'] = 'This user info already exist'
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
 @login_required
 def membership(request):
@@ -104,7 +104,7 @@ def membership(request):
 		responese['data'] = data
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
 @login_required
 def trade_add(request):
@@ -139,7 +139,7 @@ def trade_add(request):
 			responese['msg'] = 'This user has no membership with this shop'
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
 @login_required
 def order_add(request):
@@ -169,5 +169,5 @@ def order_add(request):
 			responese['msg'] = 'No membership record'
 	else:
 		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese))
+	return HttpResponse(json.dumps(responese), content_type="application/json")
 
