@@ -95,8 +95,8 @@ def membership(request):
 	if True:
 		data = {}
 		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
-		customer = Customer.objects.filter(shop = shop, username=request.REQUEST.get('customer_username'))[0]
-		membership = Membership.objects.filter(customer = customer, trade_type=request.REQUEST.get('trade_type'))[0]
+		customer = Customer.objects.filter(username=request.REQUEST.get('customer_username'))[0]
+		membership = Membership.objects.filter(shop = shop, customer = customer, trade_type=request.REQUEST.get('trade_type'))[0]
 		data['created_at'] = customer.created_at
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['used_quantity'] = membership.used_quantity
