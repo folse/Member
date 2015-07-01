@@ -111,14 +111,14 @@ def trade_add(request):
 	if True:
 		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
 		customer = Customer.objects.filter(username=request.REQUEST.get('customer_username'))[0]
-		
+		quantity = request.REQUEST.get('quantity')
 		membership_records = Membership.objects.filter(shop=shop, customer=customer,trade_type=request.REQUEST.get('trade_type'))
 		if len(membership_records) > 0:
 			# update membership info
 			membership = membership_records[0]
 			if membership.vaild_quantity > 0:
-				membership.vaild_quantity -= 1
-				membership.used_quantity += 1
+				membership.vaild_quantity -= quantity
+				membership.used_quantity += quantity
 				membership.save()
 
 				# add a new trade record
