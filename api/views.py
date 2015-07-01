@@ -116,7 +116,7 @@ def trade_add(request):
 		if len(membership_records) > 0:
 			# update membership info
 			membership = membership_records[0]
-			if membership.vaild_quantity > 0:
+			if membership.vaild_quantity - quantity >= 0:
 				membership.vaild_quantity -= quantity
 				membership.used_quantity += quantity
 				membership.save()
@@ -132,7 +132,7 @@ def trade_add(request):
 				responese['resp'] = '0000'
 			else:
 				responese['resp'] = '0005'
-				responese['msg'] = 'The vaild quantity is 0'
+				responese['msg'] = 'There is no enough quantity'
 		else:
 			responese['resp'] = '0004'
 			responese['msg'] = 'This user has no membership with this shop'
