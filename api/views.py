@@ -77,7 +77,7 @@ def membership_new(request):
             shop=shop,
             customer=customer,
             customer_username = request.GET['customer_username'],
-            vaild_quantity = 0,
+            vaild_quantity = request.GET['quantity'],
             used_quantity = 0,
             trade_type = request.GET['trade_type']
             )
