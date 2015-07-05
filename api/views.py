@@ -115,7 +115,7 @@ def trade_add(request):
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
-		quantity = request.GET['quantity']
+		quantity = int(request.GET['quantity'])
 		membership_records = Membership.objects.filter(shop=shop, customer=customer,trade_type=request.GET['trade_type'])
 		if len(membership_records) > 0:
 			# update membership info
