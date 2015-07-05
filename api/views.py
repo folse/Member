@@ -117,8 +117,8 @@ def trade_add(request):
 			# update membership info
 			membership = membership_records[0]
 			if (membership.vaild_quantity - quantity) >= 0:
-				membership.vaild_quantity -= (int)quantity
-				membership.used_quantity += (int)quantity
+				membership.vaild_quantity -= quantity
+				membership.used_quantity += quantity
 				membership.save()
 
 				# add a new trade record
