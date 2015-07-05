@@ -44,10 +44,10 @@ def shop_add(request):
 		print request.body
 		shop = Shop(
             merchant=request.user,
-            name=request.REQUEST.get('name'),
-            phone=request.REQUEST.get('phone'),
-            address=request.REQUEST.get('address'),
-            description=request.REQUEST.get('description')
+            name=request.GET['name'],
+            phone=request.GET['phone'],
+            address=request.GET['address'],
+            description=request.GET['description']
             )
 		shop.save()
 		responese['resp'] = '0000'
@@ -59,14 +59,14 @@ def shop_add(request):
 def membership_new(request):
 	responese = {}
 	if True:
-		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
-		customers = Customer.objects.filter(username=request.REQUEST.get('customer_username'))
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customers = Customer.objects.filter(username=request.GET['customer_username'])
 		if len(customers) == 0:
 			# create new customer
 			customer = Customer(
-	            username=request.REQUEST.get('customer_username'),
-	            email=request.REQUEST.get('email'),
-	            phone=request.REQUEST.get('phone')
+	            username=request.GET['customer_username'],
+	            email=request.GET['email'],
+	            phone=request.GET['phone']
 	            )
 			customer.save()
 
@@ -74,10 +74,10 @@ def membership_new(request):
 			membership = Membership(
             shop=shop,
             customer=customer,
-            customer_username = request.REQUEST.get('customer_username'),
+            customer_username = request.GET['customer_username'],
             vaild_quantity = 0,
             used_quantity = 0,
-            trade_type = request.REQUEST.get('trade_type')
+            trade_type = request.GET['trade_type']
             )
 			membership.save()
 
@@ -94,9 +94,9 @@ def membership(request):
 	responese = {}
 	if True:
 		data = {}
-		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
-		customer = Customer.objects.filter(username=request.REQUEST.get('customer_username'))[0]
-		membership = Membership.objects.filter(shop = shop, customer = customer, trade_type=request.REQUEST.get('trade_type'))[0]
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
+		membership = Membership.objects.filter(shop = shop, customer = customer, trade_type=request.GET['trade_type'])[0]
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['used_quantity'] = membership.used_quantity
 		responese['resp'] = '0000'
@@ -109,24 +109,24 @@ def membership(request):
 def trade_add(request):
 	responese = {}
 	if True:
-		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
-		customer = Customer.objects.filter(username=request.REQUEST.get('customer_username'))[0]
-		quantity = request.REQUEST.get('quantity')
-		membership_records = Membership.objects.filter(shop=shop, customer=customer,trade_type=request.REQUEST.get('trade_type'))
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
+		quantity = request.GET['quantity']
+		membership_records = Membership.objects.filter(shop=shop, customer=customer,trade_type=request.GET['trade_type'])
 		if len(membership_records) > 0:
 			# update membership info
 			membership = membership_records[0]
-			if membership.vaild_quantity - quantity >= 0:
-				membership.vaild_quantity -= quantity
-				membership.used_quantity += quantity
+			if (membership.vaild_quantity - quantity) >= 0:
+				membership.vaild_quantity -= (int)quantity
+				membership.used_quantity += (int)quantity
 				membership.save()
 
 				# add a new trade record
 				trade = Trade(
 	            shop=shop,
 	            customer=customer,
-	            customer_username=request.REQUEST.get('customer_username'),
-	            trade_type=request.REQUEST.get('trade_type')
+	            customer_username=request.GET['customer_username'],
+	            trade_type=request.GET['trade_type']
 	            )
 				trade.save()
 				responese['resp'] = '0000'
@@ -144,22 +144,22 @@ def trade_add(request):
 def order_add(request):
 	responese = {}
 	if True:
-		shop = Shop.objects.filter(id=request.REQUEST.get('shop_id'))[0]
-		customer = Customer.objects.filter(username=request.REQUEST.get('customer_username'))[0]
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
 		order = Order(
             shop = shop,
             customer = customer,
-            quantity = request.REQUEST.get('quantity'),
-            trade_type = request.REQUEST.get('trade_type')
+            quantity = request.GET['quantity'],
+            trade_type = request.GET['trade_type']
             )
 		order.save()
 
-		membership_records = Membership.objects.filter(customer = customer,trade_type=request.REQUEST.get('trade_type'))
+		membership_records = Membership.objects.filter(customer = customer,trade_type=request.GET['trade_type'])
 		if len(membership_records) > 0:
 			# add a new membership record
 			membership = membership_records[0]
-			membership.vaild_quantity += int(request.REQUEST.get('quantity'))
-
+			membership.vaild_quantity += int(request.GET['quantity'])
+			membership.save()
 			responese['resp'] = '0000'
 
 		else:
