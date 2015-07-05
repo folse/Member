@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^membership', views.membership),
     url(r'^trade_add', views.trade_add),
     url(r'^order_add', views.order_add),
+    url(r'^punch_add', views.punch_add),
     url(r'^shop_add', views.shop_add),
     # url(r'^logout', views.logout),
 ]

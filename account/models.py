@@ -131,6 +131,7 @@ class Membership(models.Model):
 	trade_type = models.IntegerField(default = 0)
 	vaild_quantity = models.IntegerField(default = 0)
 	used_quantity = models.IntegerField(default = 0)
+	punched_quantity = models.IntegerField(default = 0)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 

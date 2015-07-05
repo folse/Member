@@ -74,12 +74,11 @@ def membership_new(request):
 
 			# create new membership
 			membership = Membership(
-            shop=shop,
-            customer=customer,
-            customer_username = request.GET['customer_username'],
-            vaild_quantity = request.GET['quantity'],
-            used_quantity = 0,
-            trade_type = request.GET['trade_type']
+            	shop=shop,
+	            customer=customer,
+	            customer_username = request.GET['customer_username'],
+	            vaild_quantity = request.GET['quantity'],
+	            used_quantity = 0
             )
 			membership.save()
 
@@ -99,7 +98,7 @@ def membership(request):
 		data = {}
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
-		membership = Membership.objects.filter(shop = shop, customer = customer, trade_type=request.GET['trade_type'])[0]
+		membership = Membership.objects.filter(shop = shop, customer = customer)[0]
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['used_quantity'] = membership.used_quantity
 		responese['resp'] = '0000'
@@ -127,10 +126,10 @@ def trade_add(request):
 
 				# add a new trade record
 				trade = Trade(
-	            shop=shop,
-	            customer=customer,
-	            customer_username=request.GET['customer_username'],
-	            trade_type=request.GET['trade_type']
+	            	shop=shop,
+	            	customer=customer,
+	            	customer_username=request.GET['customer_username'],
+	            	trade_type=request.GET['trade_type']
 	            )
 				trade.save()
 				responese['resp'] = '0000'
@@ -146,29 +145,58 @@ def trade_add(request):
 	return HttpResponse(json.dumps(responese))
 
 @login_required
+def punch_add(request):
+	responese = {}
+	if True:
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customers = Customer.objects.filter(username=request.GET['customer_username'])
+		if len(customers) > 0:
+			# add a new membership record
+			customer = customers[0]
+			membership = Membership.objects.filter(customer = customer)[0]
+			membership.punched_quantity += 1
+			membership.save()
+
+			# add a new trade record
+			trade = Trade(
+            	shop=shop,
+            	customer=customer,
+            	customer_username=request.GET['customer_username'],
+            	trade_type=request.GET['trade_type']
+            )
+			trade.save()
+			responese['resp'] = '0000'
+		else:
+			responese['resp'] = '0004'
+			responese['msg'] = 'This user has no membership with this shop'
+	else:
+		responese['resp'] = '0001'
+		responese['msg'] = 'membership does not exist'
+	return HttpResponse(json.dumps(responese))
+
+@login_required
 def order_add(request):
 	responese = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
-		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
-		order = Order(
-            shop = shop,
-            customer = customer,
-            quantity = request.GET['quantity'],
-            trade_type = request.GET['trade_type']
-            )
-		order.save()
-
-		membership_records = Membership.objects.filter(customer = customer,trade_type=request.GET['trade_type'])
-		if len(membership_records) > 0:
+		customers = Customer.objects.filter(username=request.GET['customer_username'])
+		if len(customers) > 0:
 			# add a new membership record
-			membership = membership_records[0]
+			customer = customers[0]
+			membership = Membership.objects.filter(customer = customer)[0]
 			membership.vaild_quantity += int(request.GET['quantity'])
 			membership.save()
+			
+			order = Order(
+            	shop = shop,
+            	customer = customer,
+            	quantity = request.GET['quantity'],
+            	trade_type = request.GET['trade_type']
+            )
+			order.save()
+
 			responese['resp'] = '0000'
-
 		else:
-
 			responese['resp'] = '0006'
 			responese['msg'] = 'No membership record'
 	else:
