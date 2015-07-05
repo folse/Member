@@ -113,12 +113,12 @@ def trade_add(request):
 	responese = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
-		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
 		quantity = int(request.GET['quantity'])
-		membership_records = Membership.objects.filter(shop=shop, customer=customer,trade_type=request.GET['trade_type'])
-		if len(membership_records) > 0:
-			# update membership info
-			membership = membership_records[0]
+		customers = Customer.objects.filter(username=request.GET['customer_username'])
+		if len(customers) > 0:
+			# add a new membership record
+			customer = customers[0]
+			membership = Membership.objects.filter(customer = customer)[0]
 			if (membership.vaild_quantity - quantity) >= 0:
 				membership.vaild_quantity -= quantity
 				membership.used_quantity += quantity
@@ -165,6 +165,7 @@ def punch_add(request):
             	trade_type=request.GET['trade_type']
             )
 			trade.save()
+			responese['punched_quantity'] = membership.punched_quantity
 			responese['resp'] = '0000'
 		else:
 			responese['resp'] = '0004'
