@@ -71,21 +71,25 @@ def membership_new(request):
 	            phone=request.GET['phone']
 	            )
 			customer.save()
+		else:
+			customer = customers[0]
 
+		memberships = Membership.objects.filter(shop = shop, customer = customer)
+		if len(memberships) == 0:
 			# create new membership
 			membership = Membership(
-            	shop=shop,
+	        	shop=shop,
 	            customer=customer,
 	            customer_username = request.GET['customer_username'],
 	            vaild_quantity = request.GET['quantity'],
 	            used_quantity = 0
-            )
+	        )
 			membership.save()
 
 			responese['resp'] = '0000'
 		else :
 			responese['resp'] = '0003'
-			responese['msg'] = 'This user info already exist'
+			responese['msg'] = 'This customer already exist'
 	else:
 		responese['resp'] = '0001'
 		responese['msg'] = 'add membership faild'
@@ -101,6 +105,7 @@ def membership(request):
 		membership = Membership.objects.filter(shop = shop, customer = customer)[0]
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['used_quantity'] = membership.used_quantity
+		data['punched_quantity'] = membership.punched_quantity
 		responese['resp'] = '0000'
 		responese['data'] = data
 	else:
@@ -170,6 +175,28 @@ def punch_add(request):
 		else:
 			responese['resp'] = '0004'
 			responese['msg'] = 'This user has no membership with this shop'
+	else:
+		responese['resp'] = '0001'
+		responese['msg'] = 'membership does not exist'
+	return HttpResponse(json.dumps(responese))
+
+@login_required
+def punch_reset(request):
+	responese = {}
+	if True:
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		customers = Customer.objects.filter(username=request.GET['customer_username'])
+		if len(customers) > 0:
+			# add a new membership record
+			customer = customers[0]
+			membership = Membership.objects.filter(customer = customer)[0]
+			membership.punched_quantity = 0
+			membership.save()
+
+			responese['resp'] = '0000'
+		else:
+			responese['resp'] = '0004'
+			responese['msg'] = 'no this customer'
 	else:
 		responese['resp'] = '0001'
 		responese['msg'] = 'membership does not exist'
