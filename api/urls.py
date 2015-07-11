@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^punch_add', views.punch_add),
     url(r'^punch_reset', views.punch_reset),
     url(r'^shop_add', views.shop_add),
+    url(r'^shop_promotion', views.shop_promotion),
+    url(r'^shop', views.shop),
     # url(r'^logout', views.logout),
 ]

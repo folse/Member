@@ -58,12 +58,45 @@ def shop_add(request):
 	return HttpResponse(json.dumps(responese))
 
 @login_required
+def shop(request):
+	responese = {}
+	if True:
+		data = {}
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		memberships = Membership.objects.filter(shop = shop)
+		data['name'] = shop.name
+		data['promotion'] = shop.promotion
+		data['member_count'] = len(memberships)
+		responese['resp'] = '0000'
+		responese['data'] = data
+	else:
+		responese['resp'] = '0001'
+		responese['msg'] = 'get membership faild'
+	return HttpResponse(json.dumps(responese))
+
+@login_required
+def shop_promotion(request):
+	responese = {}
+	if True:
+		data = {}
+		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+		shop.promotion = request.GET['promotion']
+		shop.save()
+		responese['resp'] = '0000'
+	else:
+		responese['resp'] = '0001'
+		responese['msg'] = 'update promotion faild'
+	return HttpResponse(json.dumps(responese))
+
+@login_required
 def membership_new(request):
 	responese = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
-		if len(customers) == 0:
+		if customers.exists():
+			customer = customers[0]
+		else:
 			# create new customer
 			customer = Customer(
 	            username=request.GET['customer_username'],
@@ -71,11 +104,12 @@ def membership_new(request):
 	            phone=request.GET['phone']
 	            )
 			customer.save()
-		else:
-			customer = customers[0]
 
 		memberships = Membership.objects.filter(shop = shop, customer = customer)
-		if len(memberships) == 0:
+		if memberships.exists():
+			responese['resp'] = '0003'
+			responese['msg'] = 'This customer already exist'
+		else :
 			# create new membership
 			membership = Membership(
 	        	shop=shop,
@@ -87,9 +121,6 @@ def membership_new(request):
 			membership.save()
 
 			responese['resp'] = '0000'
-		else :
-			responese['resp'] = '0003'
-			responese['msg'] = 'This customer already exist'
 	else:
 		responese['resp'] = '0001'
 		responese['msg'] = 'add membership faild'
@@ -98,11 +129,12 @@ def membership_new(request):
 @login_required
 def membership(request):
 	responese = {}
-	if True:
-		data = {}
-		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
-		customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
-		membership = Membership.objects.filter(shop = shop, customer = customer)[0]
+	data = {}
+	shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
+	customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
+	memberships = Membership.objects.filter(shop = shop, customer = customer)
+	if memberships.exists():
+		membership = memberships[0]
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['used_quantity'] = membership.used_quantity
 		data['punched_quantity'] = membership.punched_quantity
@@ -110,7 +142,7 @@ def membership(request):
 		responese['data'] = data
 	else:
 		responese['resp'] = '0001'
-		responese['msg'] = 'get membership faild'
+		responese['msg'] = 'This membership does not exist'
 	return HttpResponse(json.dumps(responese))
 
 @login_required
@@ -120,7 +152,7 @@ def trade_add(request):
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		quantity = int(request.GET['quantity'])
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
-		if len(customers) > 0:
+		if customers.exists():
 			# add a new membership record
 			customer = customers[0]
 			membership = Membership.objects.filter(customer = customer)[0]
@@ -155,7 +187,7 @@ def punch_add(request):
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
-		if len(customers) > 0:
+		if customers.exists():
 			# add a new membership record
 			customer = customers[0]
 			membership = Membership.objects.filter(customer = customer)[0]
@@ -186,7 +218,7 @@ def punch_reset(request):
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
-		if len(customers) > 0:
+		if customers.exists():
 			# add a new membership record
 			customer = customers[0]
 			membership = Membership.objects.filter(customer = customer)[0]
@@ -208,7 +240,7 @@ def order_add(request):
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
-		if len(customers) > 0:
+		if customers.exists():
 			# add a new membership record
 			customer = customers[0]
 			membership = Membership.objects.filter(customer = customer)[0]
