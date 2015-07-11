@@ -115,3 +115,5 @@ SESSION_COOKIE_AGE=60*60*24*365*100
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, '/home/ubuntu/member/static')
