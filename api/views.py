@@ -66,7 +66,13 @@ def shop(request):
 		memberships = Membership.objects.filter(shop = shop)
 		data['name'] = shop.name
 		data['promotion'] = shop.promotion
-		data['member_count'] = len(memberships)
+		members = []
+		for membership in memberships :
+			member = {}
+			member['username'] = membership.customer_username
+			member['vaild_quantity'] = membership.vaild_quantity
+			members.append(member)
+		data['members'] = members
 		responese['resp'] = '0000'
 		responese['data'] = data
 	else:
