@@ -148,7 +148,7 @@ def membership(request):
 		responese['data'] = data
 	else:
 		responese['resp'] = '0001'
-		responese['msg'] = 'This membership does not exist'
+		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	return HttpResponse(json.dumps(responese))
 
 @login_required
@@ -178,13 +178,13 @@ def trade_add(request):
 				responese['resp'] = '0000'
 			else:
 				responese['resp'] = '0005'
-				responese['msg'] = 'There is no enough quantity'
+				responese['msg'] = 'Fel, Inköp är inte tillräckligt' #There is no enough quantity
 		else:
 			responese['resp'] = '0004'
 			responese['msg'] = 'This user has no membership with this shop'
 	else:
 		responese['resp'] = '0001'
-		responese['msg'] = 'membership does not exist'
+		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	return HttpResponse(json.dumps(responese))
 
 @login_required
@@ -215,7 +215,7 @@ def punch_add(request):
 			responese['msg'] = 'This user has no membership with this shop'
 	else:
 		responese['resp'] = '0001'
-		responese['msg'] = 'membership does not exist'
+		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	return HttpResponse(json.dumps(responese))
 
 @login_required
@@ -237,7 +237,7 @@ def punch_reset(request):
 			responese['msg'] = 'no this customer'
 	else:
 		responese['resp'] = '0001'
-		responese['msg'] = 'membership does not exist'
+		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	return HttpResponse(json.dumps(responese))
 
 @login_required
@@ -264,7 +264,7 @@ def order_add(request):
 			responese['resp'] = '0000'
 		else:
 			responese['resp'] = '0006'
-			responese['msg'] = 'No membership record'
+			responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	else:
 		responese['resp'] = '0001'
 		responese['msg'] = 'add order faild'
