@@ -95,6 +95,18 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": "member",
+#         "USER": "postgres",
+#         "PASSWORD": "firstPostgre",
+#         "HOST": "localhost",
+#         "PORT": "",
+#     }
+# }
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -117,7 +129,6 @@ SESSION_COOKIE_AGE=60*60*24*365*100
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, '/home/ubuntu/member/static')
-
 
 EMAIL_HOST = 'smtp.ym.163.com'
 EMAIL_PORT = 25
