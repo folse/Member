@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
 
 class MerchantManager(BaseUserManager):
  
@@ -35,8 +34,8 @@ class Merchant(AbstractBaseUser):
 	phone = models.CharField(max_length=64, null=True, default='')
 	real_name = models.CharField(max_length=256, null=False, default='')
 	created_at = models.DateTimeField(auto_now_add=True)
-	is_admin = models.BooleanField(default=True)
-	is_staff = models.BooleanField(default=True)
+	is_admin = models.BooleanField(default=False)
+	is_staff = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
 
 	USERNAME_FIELD = 'username'

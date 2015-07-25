@@ -117,3 +117,13 @@ SESSION_COOKIE_AGE=60*60*24*365*100
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, '/home/ubuntu/member/static')
+
+
+EMAIL_HOST = 'smtp.ym.163.com'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = 'no-reply@mtscandic.com'
+EMAIL_HOST_PASSWORD = '456456'
+EMAIL_SUBJECT_PREFIX = u'[Motion Touch]'
+EMAIL_USE_TLS = True
+SERVER_EMAIL = 'no-reply@mtscandic.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

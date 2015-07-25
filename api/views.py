@@ -126,6 +126,13 @@ def membership_new(request):
 	        )
 			membership.save()
 
+			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+-H "Content-Type: application/json" \
+-X POST -d '+'{"to": "46761938054", "message": "Valkommen till '+ shop.name +'kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.", "from": "Beepsend", "encoding": "UTF-8", "receive_dlr": 0}'+' \
+"https://api.beepsend.com/2/send/"'
+
+			print os.popen(sms_cmd).readlines()
+
 			responese['resp'] = '0000'
 	else:
 		responese['resp'] = '0001'
@@ -178,7 +185,7 @@ def trade_add(request):
 				responese['resp'] = '0000'
 			else:
 				responese['resp'] = '0005'
-				responese['msg'] = 'Fel, Inköp är inte tillräckligt' #There is no enough quantity
+				responese['msg'] = 'Fel, ckligt' #There is no enough quantity
 		else:
 			responese['resp'] = '0004'
 			responese['msg'] = 'This user has no membership with this shop'
