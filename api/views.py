@@ -263,6 +263,7 @@ def order_add(request):
 			order = Order(
             	shop = shop,
             	customer = customer,
+            	customer_username = customer.username,
             	quantity = request.GET['quantity'],
             	trade_type = request.GET['trade_type']
             )
