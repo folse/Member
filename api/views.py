@@ -4,7 +4,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from account.models import Merchant, Customer, Shop, Trade, Order, Membership
 
-import os,json
+import os,sys,json
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def register_merchant(request):
 	responese = {}
