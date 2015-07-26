@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from account.models import Merchant, Customer, Shop, Trade, Order, Membership
 
-import json
+import os,json
 
 def register_merchant(request):
 	responese = {}
@@ -128,7 +128,7 @@ def membership_new(request):
 
 			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
--X POST -d '+'{"to": "46761938054", "message": "Valkommen till '+ shop.name +'kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.", "from": "Beepsend", "encoding": "UTF-8", "receive_dlr": 0}'+' \
+-X POST -d '+'{"to": "46761938054", "message": "Valkommen till '+ shop.name +'kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.['+ request.GET['quantity'] +']", "from": "Beepsend", "encoding": "UTF-8", "receive_dlr": 0}'+' \
 "https://api.beepsend.com/2/send/"'
 
 			print os.popen(sms_cmd).readlines()
