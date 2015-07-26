@@ -21,3 +21,5 @@ urlpatterns = [
     url(r'^api/', include('api.urls')),
     url('^', include('django.contrib.auth.urls'))
 ]
+
+admin.site.site_header = 'Motion Touch Administration'
