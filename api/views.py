@@ -128,11 +128,14 @@ def membership_new(request):
 
 			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
--X POST -d '+'{"to": "46761938054", "message": "Valkommen till '+ shop.name +'kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.['+ request.GET['quantity'] +']", "from": "Beepsend", "encoding": "UTF-8", "receive_dlr": 0}'+' \
+-X POST -d \'{"to": "'+ request.GET['customer_username'] +'", "message": "Valkommen till '+ shop.name +' kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.You have charged: ['+ request.GET['quantity'] +']", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
 "https://api.beepsend.com/2/send/"'
 
-			print os.popen(sms_cmd).readlines()
+			message = os.popen(sms_cmd).readline()
 
+			print message
+
+			responese['msg'] = message
 			responese['resp'] = '0000'
 	else:
 		responese['resp'] = '0001'
@@ -182,6 +185,16 @@ def trade_add(request):
 	            	trade_type=request.GET['trade_type']
 	            )
 				trade.save()
+				
+				sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+-H "Content-Type: application/json" \
+-X POST -d \'{"to": "'+ request.GET['customer_username'] +'", "message": "Valkommen till '+ shop.name +' kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+"https://api.beepsend.com/2/send/"'
+
+				message = os.popen(sms_cmd).readline()
+				print message
+
+				responese['msg'] = message
 				responese['resp'] = '0000'
 			else:
 				responese['resp'] = '0005'
