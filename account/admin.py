@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Merchant, Customer, Shop, Trade, Order
+from .models import Merchant, Customer, Shop, Trade, Order, Membership
 from django import forms
 
 from django.contrib.auth.admin import UserAdmin
+
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 class UserCreationForm(forms.ModelForm):
@@ -80,10 +81,10 @@ class MerchantAdmin(UserAdmin):
 
 admin.site.register(Merchant,MerchantAdmin)
 
-
 admin.site.register(Shop)
 admin.site.register(Trade)
 admin.site.register(Order)
 admin.site.register(Customer)
+admin.site.register(Membership)
 
 admin.site.unregister(Group)
