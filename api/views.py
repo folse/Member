@@ -131,7 +131,7 @@ def membership_new(request):
 
 			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
--X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Valkommen till '+ shop.name +' kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.You have charged: ['+ request.GET['quantity'] +']", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Valkommen till '+ shop.name +' kundklubb. Du nu del av butikens erbjudanden och kan direkt till din mobil.Grattis, du har nu laddat upp med ' + request.GET['quantity'] + 'poäng.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
 "https://api.beepsend.com/2/send/"'
 
 			message = os.popen(sms_cmd).readline()
@@ -232,6 +232,16 @@ def punch_add(request):
             )
 			trade.save()
 			responese['punched_quantity'] = membership.punched_quantity
+
+			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+-H "Content-Type: application/json" \
+-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Välkommen till '+ shop.name +'. Du har nu samlat ' + request.GET['quantity'] + ' poäng, samla ihop lite fler så får du del av våra specialerbjudanden. För mer info så kan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+"https://api.beepsend.com/2/send/"'
+
+			message = os.popen(sms_cmd).readline()
+
+			print message
+
 			responese['resp'] = '0000'
 		else:
 			responese['resp'] = '0004'
@@ -284,6 +294,15 @@ def order_add(request):
             	trade_type = request.GET['trade_type']
             )
 			order.save()
+
+			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+-H "Content-Type: application/json" \
+-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Tack för att du handlar hos '+ shop.name +'. Du har nu ' + request.GET['quantity'] + ' poäng kvar påditt konto hos oss, ladda upp med fler poäng sådu inte missar ut pånågot bra erbjudande. För mer information såkan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+"https://api.beepsend.com/2/send/"'
+
+			message = os.popen(sms_cmd).readline()
+
+			print message
 
 			responese['resp'] = '0000'
 		else:
