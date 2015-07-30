@@ -75,6 +75,7 @@ def shop(request):
 			member = {}
 			member['username'] = membership.customer_username
 			member['vaild_quantity'] = membership.vaild_quantity
+			member['punched_quantity'] = membership.punched_quantity
 			members.append(member)
 		data['members'] = members
 		responese['resp'] = '0000'
@@ -111,7 +112,8 @@ def membership_new(request):
 			customer = Customer(
 	            username=request.GET['customer_username'],
 	            email=request.GET['email'],
-	            phone=request.GET['phone']
+	            phone=request.GET['phone'],
+	            real_name=request.GET['real_name']
 	            )
 			customer.save()
 
@@ -155,8 +157,9 @@ def membership(request):
 	memberships = Membership.objects.filter(shop = shop, customer = customer)
 	if memberships.exists():
 		membership = memberships[0]
-		data['vaild_quantity'] = membership.vaild_quantity
+		data['real_name'] = customer.real_name
 		data['used_quantity'] = membership.used_quantity
+		data['vaild_quantity'] = membership.vaild_quantity
 		data['punched_quantity'] = membership.punched_quantity
 		responese['resp'] = '0000'
 		responese['data'] = data
@@ -236,7 +239,7 @@ def punch_add(request):
 
 			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
--X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Välkommen till '+ shop.name +'. Du har nu samlat ' + request.GET['quantity'] + ' poäng, samla ihop lite fler så får du del av våra specialerbjudanden. För mer info så kan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Välkommen till '+ shop.name +'. Du har nu samlat 1 poäng, samla ihop lite fler så får du del av våra specialerbjudanden. För mer info så kan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
 "https://api.beepsend.com/2/send/"'
 
 			message = os.popen(sms_cmd).readline()
