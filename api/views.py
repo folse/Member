@@ -32,6 +32,7 @@ def login_merchant(request):
 		shop = Shop.objects.filter(merchant=user)[0]
 		responese['resp'] = '0000'
 		responese['shop_id'] = '%s' % shop.id
+		responese['shop_name'] = '%s' % shop.name
 	else:
 		responese['resp'] = '0001'
 		responese['msg'] = 'login faild'
