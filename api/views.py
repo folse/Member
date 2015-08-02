@@ -196,7 +196,7 @@ def trade_add(request):
 				
 				sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
--X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Tack för att du handlar '+ request.GET['quantity'] +' poäng hos '+ shop.name +'.Du har nu ' + membership.vaild_quantity + ' poäng kvar på ditt konto hos oss, ladda upp med fler poäng sådu inte missar ut pånågot bra erbjudande. För mer information såkan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Tack för att du handlar '+ request.GET['quantity'] +' poäng hos '+ shop.name +'.Du har nu ' + str(membership.vaild_quantity) + ' poäng kvar på ditt konto hos oss, ladda upp med fler poäng sådu inte missar ut pånågot bra erbjudande. För mer information såkan du kontakta '+ shop.name +'.", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
 "https://api.beepsend.com/2/send/"'
 
 				message = os.popen(sms_cmd).readline()
