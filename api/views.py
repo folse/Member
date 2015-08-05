@@ -11,41 +11,41 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 def register_merchant(request):
-	responese = {}
-	responese['resp'] = '0000'
+	response = {}
+	response['resp'] = '0000'
 	email = request.GET['email']
 	username = request.GET['email']
 	password = request.GET['password']
 	if Merchant.objects.create_user(username,email,password) is not None:
-		responese['resp'] = '0000'
+		response['resp'] = '0000'
 	else :
-		responese['resp'] = '0001'
-	return HttpResponse(json.dumps(responese), content_type="application/json")
+		response['resp'] = '0001'
+	return HttpResponse(json.dumps(response), content_type="application/json")
 
 def login_merchant(request):
-	responese = {}
+	response = {}
 	username = request.GET['username']
 	password = request.GET['password']
 	user = authenticate(username=username, password=password)
 	if user is not None:
 		login(request, user)
 		shop = Shop.objects.filter(merchant=user)[0]
-		responese['resp'] = '0000'
-		responese['shop_id'] = '%s' % shop.id
-		responese['shop_name'] = '%s' % shop.name
+		response['resp'] = '0000'
+		response['shop_id'] = '%s' % shop.id
+		response['shop_name'] = '%s' % shop.name
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'login faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'login faild'
+	return HttpResponse(json.dumps(response))
 
 # def logout(request):
-# 	responese = {}
-# 	responese['resp'] = '0000'
-# 	return HttpResponse(json.dumps(responese), content_type="application/json") 
+# 	response = {}
+# 	response['resp'] = '0000'
+# 	return HttpResponse(json.dumps(response), content_type="application/json") 
 
 @login_required
 def shop_add(request):
-	responese = {}
+	response = {}
 	if True:
 		print request.body
 		shop = Shop(
@@ -56,15 +56,15 @@ def shop_add(request):
             description=request.GET['description']
             )
 		shop.save()
-		responese['resp'] = '0000'
+		response['resp'] = '0000'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'add shop faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'add shop faild'
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def shop(request):
-	responese = {}
+	response = {}
 	if True:
 		data = {}
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
@@ -79,30 +79,30 @@ def shop(request):
 			member['punched_quantity'] = membership.punched_quantity
 			members.append(member)
 		data['members'] = members
-		responese['resp'] = '0000'
-		responese['data'] = data
+		response['resp'] = '0000'
+		response['data'] = data
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'get membership faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'get membership faild'
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def shop_promotion(request):
-	responese = {}
+	response = {}
 	if True:
 		data = {}
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		shop.promotion = request.GET['promotion']
 		shop.save()
-		responese['resp'] = '0000'
+		response['resp'] = '0000'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'update promotion faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'update promotion faild'
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def membership_new(request):
-	responese = {}
+	response = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
@@ -120,8 +120,8 @@ def membership_new(request):
 
 		memberships = Membership.objects.filter(shop = shop, customer = customer)
 		if memberships.exists():
-			responese['resp'] = '0003'
-			responese['msg'] = 'This customer already exist'
+			response['resp'] = '0003'
+			response['msg'] = 'This customer already exist'
 		else :
 			# create new membership
 			membership = Membership(
@@ -142,16 +142,34 @@ def membership_new(request):
 
 			print message
 
-			responese['msg'] = message
-			responese['resp'] = '0000'
+			response['msg'] = message
+			response['resp'] = '0000'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'add membership faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'add membership faild'
+	return HttpResponse(json.dumps(response))
+
+def membership_customer(request):
+	response = {}
+	data = {}
+	memberships = []
+	customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
+	memberships_data = Membership.objects.filter(customer = customer)
+	for membership_data in memberships_data :
+		membership = {}
+		shop = Shop.objects.filter(id=membership_data.shop_id)[0]
+		membership['shop_name'] = shop.name
+		membership['vaild_quantity'] = membership_data.vaild_quantity
+		membership['punched_quantity'] = membership_data.punched_quantity
+		memberships.append(membership)
+	data['memberships'] = memberships
+	response['resp'] = '0000'
+	response['data'] = data
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def membership(request):
-	responese = {}
+	response = {}
 	data = {}
 	shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 	customer = Customer.objects.filter(username=request.GET['customer_username'])[0]
@@ -162,16 +180,16 @@ def membership(request):
 		data['used_quantity'] = membership.used_quantity
 		data['vaild_quantity'] = membership.vaild_quantity
 		data['punched_quantity'] = membership.punched_quantity
-		responese['resp'] = '0000'
-		responese['data'] = data
+		response['resp'] = '0000'
+		response['data'] = data
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def trade_add(request):
-	responese = {}
+	response = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		quantity = int(request.GET['quantity'])
@@ -202,22 +220,22 @@ def trade_add(request):
 				message = os.popen(sms_cmd).readline()
 				print message
 
-				responese['msg'] = message
-				responese['resp'] = '0000'
+				response['msg'] = message
+				response['resp'] = '0000'
 			else:
-				responese['resp'] = '0005'
-				responese['msg'] = 'Fel, ckligt' #There is no enough quantity
+				response['resp'] = '0005'
+				response['msg'] = 'Fel, ckligt' #There is no enough quantity
 		else:
-			responese['resp'] = '0004'
-			responese['msg'] = 'This user has no membership with this shop'
+			response['resp'] = '0004'
+			response['msg'] = 'This user has no membership with this shop'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def punch_add(request):
-	responese = {}
+	response = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
@@ -236,7 +254,7 @@ def punch_add(request):
             	trade_type=request.GET['trade_type']
             )
 			trade.save()
-			responese['punched_quantity'] = membership.punched_quantity
+			response['punched_quantity'] = membership.punched_quantity
 
 			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
 -H "Content-Type: application/json" \
@@ -247,18 +265,18 @@ def punch_add(request):
 
 			print message
 
-			responese['resp'] = '0000'
+			response['resp'] = '0000'
 		else:
-			responese['resp'] = '0004'
-			responese['msg'] = 'This user has no membership with this shop'
+			response['resp'] = '0004'
+			response['msg'] = 'This user has no membership with this shop'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def punch_reset(request):
-	responese = {}
+	response = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
@@ -269,18 +287,19 @@ def punch_reset(request):
 			membership.punched_quantity = 0
 			membership.save()
 
-			responese['resp'] = '0000'
+			response['resp'] = '0000'
 		else:
-			responese['resp'] = '0004'
-			responese['msg'] = 'no this customer'
+			response['resp'] = '0004'
+			response['msg'] = 'no this customer'
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def order_add(request):
-	responese = {}
+	data = {}
+	response = {}
 	if True:
 		shop = Shop.objects.filter(id=request.GET['shop_id'])[0]
 		customers = Customer.objects.filter(username=request.GET['customer_username'])
@@ -309,12 +328,15 @@ def order_add(request):
 
 			print message
 
-			responese['resp'] = '0000'
+			data['vaild_quantity'] = membership.vaild_quantity
+			response['data'] = data
+			response['resp'] = '0000'
+			
 		else:
-			responese['resp'] = '0006'
-			responese['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
+			response['resp'] = '0006'
+			response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
 	else:
-		responese['resp'] = '0001'
-		responese['msg'] = 'add order faild'
-	return HttpResponse(json.dumps(responese))
+		response['resp'] = '0001'
+		response['msg'] = 'add order faild'
+	return HttpResponse(json.dumps(response))
 
