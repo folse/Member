@@ -20,7 +20,7 @@ def register_merchant(request):
 		response['resp'] = '0000'
 	else :
 		response['resp'] = '0001'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 def login_merchant(request):
 	response = {}
@@ -36,12 +36,12 @@ def login_merchant(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'login faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 # def logout(request):
 # 	response = {}
 # 	response['resp'] = '0000'
-# 	return HttpResponse(json.dumps(response), content_type="application/json") 
+# 	return HttpResponse(json.dumps(response)) 
 
 @login_required
 def shop_add(request):
@@ -60,7 +60,7 @@ def shop_add(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'add shop faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def shop(request):
@@ -84,7 +84,7 @@ def shop(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'get membership faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def shop_promotion(request):
@@ -98,7 +98,7 @@ def shop_promotion(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'update promotion faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def membership_new(request):
@@ -147,7 +147,7 @@ def membership_new(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'add membership faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 def membership_customer(request):
 	response = {}
@@ -165,7 +165,7 @@ def membership_customer(request):
 	data['memberships'] = memberships
 	response['resp'] = '0000'
 	response['data'] = data
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def membership(request):
@@ -185,7 +185,7 @@ def membership(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def trade_add(request):
@@ -231,7 +231,7 @@ def trade_add(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def punch_add(request):
@@ -272,7 +272,7 @@ def punch_add(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def punch_reset(request):
@@ -294,7 +294,7 @@ def punch_reset(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'Fel, Denna medlem har inte registrerats innan' #This membership does not exist
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
 @login_required
 def order_add(request):
@@ -338,5 +338,5 @@ def order_add(request):
 	else:
 		response['resp'] = '0001'
 		response['msg'] = 'add order faild'
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response))
 
