@@ -15,5 +15,6 @@ urlpatterns = [
     url(r'^shop_add', views.shop_add),
     url(r'^shop_promotion', views.shop_promotion),
     url(r'^shop', views.shop),
+    url(r'^send_sms', views.send_sms),
     # url(r'^logout', views.logout),
 ]

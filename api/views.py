@@ -340,3 +340,19 @@ def order_add(request):
 		response['msg'] = 'add order faild'
 	return HttpResponse(json.dumps(response))
 
+@login_required
+def send_sms(request):
+	data = {}
+	response = {}
+	memberships = Membership.objects.filter(shop_id=request.GET['shop_id'])
+	for membership in memberships :
+		sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+-H "Content-Type: application/json" \
+-X POST -d \'{"to": "46' + membership.customer_username +'", "message": "'+ request.GET['content'] +'", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+"https://api.beepsend.com/2/send/"'
+		message = os.popen(sms_cmd).readline()
+		print message
+		
+	response['data'] = data
+	response['resp'] = '0000'
+	return HttpResponse(json.dumps(response))
