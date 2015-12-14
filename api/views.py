@@ -254,16 +254,17 @@ def punch_add(request):
             	trade_type=request.GET['trade_type']
             )
 			trade.save()
-			response['punched_quantity'] = membership.punched_quantity
 
-			sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
--H "Content-Type: application/json" \
--X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Välkommen till '+ shop.name +'. Du har nu samlat ihop 1 poäng, samla ihop mer för en trevlig belöning", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
-"https://api.beepsend.com/2/send/"'
+			if request.GET['need_send_punch_notification'] == 'True':
 
-			message = os.popen(sms_cmd).readline()
+				sms_cmd = 'curl -H "Authorization: Token f1205211a7f4f97331eca4f78ced18cf2304298bca79f782a03f051132576b91" \
+					-H "Content-Type: application/json" \
+					-X POST -d \'{"to": "46' + request.GET['customer_username'][1:] +'", "message": "Välkommen till '+ shop.name +'. Du har nu samlat ihop 1 poäng, samla ihop mer för en trevlig belöning", "from": "Kundsystem", "encoding": "UTF-8", "receive_dlr": 0}\' \
+					"https://api.beepsend.com/2/send/"'
 
-			print message
+				message = os.popen(sms_cmd).readline()
+
+				print message
 
 			response['resp'] = '0000'
 		else:
